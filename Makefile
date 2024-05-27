@@ -1,9 +1,12 @@
+export THEOS_DEVICE_IP = localhost
+export THEOS_DEVICE_PORT = 2223
 export TARGET_CODESIGN_FLAGS="-Ssign.plist"
-export ARCHS = armv7 arm64
-export TARGET=iphone:11.2:4.0
+export ARCHS = arm64
+export TARGET=iphone:clang:latest:7.0
 GO_EASY_ON_ME=1
-include theos/makefiles/common.mk
-
+include $(THEOS)/makefiles/common.mk
+#THEOS_SCHEMA = schema1
+ipainstaller_CFLAGS = -Wno-module-import-in-extern-c
 TOOL_NAME = ipainstaller
 ipainstaller_FILES = \
 					ZipArchive/minizip/ioapi.c \
@@ -13,18 +16,12 @@ ipainstaller_FILES = \
 					ZipArchive/ZipArchive.mm \
 					UIDevice-Capabilities/UIDevice-Capabilities.m \
 					main.mm
-ipainstaller_FRAMEWORKS = Foundation UIKit ImageIO CoreGraphics
-ipainstaller_PRIVATE_FRAMEWORKS = GraphicsServices MobileCoreServices
-ipainstaller_LDFLAGS = MobileInstallation -lz
-ipainstaller_INSTALL_PATH = /usr/bin
+ipainstaller_FRAMEWORKS = UIKit Foundation ImageIO CoreGraphics
+ipainstaller_PRIVATE_FRAMEWORKS = MobileCoreServices
+ipainstaller_LDFLAGS = -lz
+ipainstaller_INSTALL_PATH = /var/jb/usr/local/bin
 
-include theos/makefiles/tool.mk
+include $(THEOS_MAKE_PATH)/tool.mk
 
 VERSION.INC_BUILD_NUMBER = 1
-
-before-package::
-	ln -s ipainstaller $(THEOS_STAGING_DIR)/usr/bin/installipa
-	find $(THEOS_STAGING_DIR) -exec touch -r $(THEOS_STAGING_DIR)/usr/bin/installipa {} \;
-	chmod 0755 $(THEOS_STAGING_DIR)/usr/bin/ipainstaller
-	chmod 0644 $(THEOS_STAGING_DIR)/DEBIAN/control
 
