@@ -1,10 +1,11 @@
-export THEOS_DEVICE_IP = localhost
-export THEOS_DEVICE_PORT = 2223
 export TARGET_CODESIGN_FLAGS="-Ssign.plist"
-export ARCHS = arm64
+export ARCHS = arm64 arm64e
 export TARGET=iphone:clang:latest:7.0
 GO_EASY_ON_ME=1
+
 include $(THEOS)/makefiles/common.mk
+
+
 #THEOS_SCHEMA = schema1
 ipainstaller_CFLAGS = -Wno-module-import-in-extern-c
 TOOL_NAME = ipainstaller
@@ -19,7 +20,7 @@ ipainstaller_FILES = \
 ipainstaller_FRAMEWORKS = UIKit Foundation ImageIO CoreGraphics
 ipainstaller_PRIVATE_FRAMEWORKS = MobileCoreServices
 ipainstaller_LDFLAGS = -lz
-ipainstaller_INSTALL_PATH = /var/jb/usr/local/bin
+# ipainstaller_INSTALL_PATH = /var/jb/usr/local/bin
 
 include $(THEOS_MAKE_PATH)/tool.mk
 

@@ -3,7 +3,7 @@
 #import <UIKit/UIKit.h>
 #import "ZipArchive/ZipArchive.h"
 #import "UIDevice-Capabilities/UIDevice-Capabilities.h"
-#import <rootless.h>
+#import <roothide.h>
 #define EXECUTABLE_VERSION @"3.4.1"
 
 #define KEY_INSTALL_TYPE @"User"
@@ -1034,15 +1034,28 @@ int main (int argc, char **argv, char **envp) {
         } else {
             if (!isBackup && !isBackupFull) {
                 noParameters = YES;
+
                 NSURL *url = [NSURL fileURLWithPath:arg isDirectory:NO];
                 BOOL isDirectory;
                 if (url && [fileMgr fileExistsAtPath:[[url absoluteURL] path] isDirectory:&isDirectory]) {
-                    if (isDirectory)
+                    if (isDirectory) {
                         [filesNotFound addObject:arg];
-                    else
+                    } else {
                         [ipaFiles addObject:[[url absoluteURL] path]]; //File exists
-                } else
-                    [filesNotFound addObject:arg];
+                    }
+                } else {
+                    NSString* rootArg = jbroot(arg);
+                    NSURL* rootURL = [NSURL fileURLWithPath:rootArg isDirectory:NO];
+                    if (rootURL && [fileMgr fileExistsAtPath:[[rootURL absoluteURL] path] isDirectory:&isDirectory]) {
+                        if (isDirectory) {
+                            [filesNotFound addObject:arg];
+                        } else {
+                            [ipaFiles addObject:[[rootURL absoluteURL] path]]; //File exists
+                        }
+                    } else {
+                        [filesNotFound addObject:arg];
+                    }
+                }
             }
         }
     }

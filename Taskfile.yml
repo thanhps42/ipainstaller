@@ -1,0 +1,17 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  BUILD_PACKAGE: '{{if eq (env "FINAL") "1"}}FINALPACKAGE=1{{end}} THEOS_PACKAGE_SCHEME={{env "SCHEME"}} make package'
+
+tasks:
+  build:
+    cmds:
+      - rm -rf packages .theos
+      - make clean
+      - '{{.BUILD_PACKAGE}}'
+      - |
+        {{if ne (env "IP") ""}}
+          THEOS_DEVICE_IP={{env "IP"}} make install
+        {{end}}
